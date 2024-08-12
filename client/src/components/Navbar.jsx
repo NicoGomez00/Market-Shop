@@ -24,8 +24,14 @@ function ResponsiveAppBar() {
   const theme = useTheme()
 
   useEffect(() => {
-    if(isAuthenticated) getAllCart()
-  }, [isAuthenticated])
+    console.log("User state:", user);
+    if (!isAuthenticated) {
+        handleCloseNavMenu(); // Cierra el menú si el usuario no está autenticado.
+        setAnchorElUser(null); // Asegúrate de cerrar cualquier otro menú de usuario.
+    } else {
+        getAllCart();
+    }
+  }, [isAuthenticated, user]);
 
 
   const handleOpenNavMenu = (event) => {
@@ -34,6 +40,11 @@ function ResponsiveAppBar() {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
+
+  const logoutFunc = () => {
+    handleCloseNavMenu()
+    logout()
+  }
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -210,7 +221,7 @@ function ResponsiveAppBar() {
                 <MenuItem component={Link} to={`/useraccount`} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">My Account</Typography>
                 </MenuItem>
-                <MenuItem component={Link} to={'/'} onClick={() => {handleCloseNavMenu(); logout();}}>
+                <MenuItem component={Link} to={'/'} onClick={logoutFunc}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
               </Menu>

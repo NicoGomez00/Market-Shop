@@ -57,12 +57,14 @@ const LoginPage = () => {
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          {
-            errors.map((error , index) => (
+          {errors.length > 0 && 
+            errors.map((error, index) => (
               <Box key={index}>
-                <Alert sx={{marginBottom:1}} severity="error">{error}</Alert>
+                <Alert sx={{ marginBottom: 1 }} severity="error">
+                  {error}
+                </Alert>
               </Box>
-          ))
+            ))
           }
             <TextField
               margin="normal"

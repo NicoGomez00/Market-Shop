@@ -56,12 +56,14 @@ const RegisterPage = () => {
 
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 
-          {
-            errors.map((error , index) => (
+          {errors.length > 0 && 
+            errors.map((error, index) => (
               <Box key={index}>
-                <Alert sx={{marginBottom:1}} severity="error">{error}</Alert>
+                <Alert sx={{ marginBottom: 1 }} severity="error">
+                  {error}
+                </Alert>
               </Box>
-          ))
+            ))
           }
 
             <Grid container spacing={2}>

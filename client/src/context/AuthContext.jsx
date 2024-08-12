@@ -29,11 +29,11 @@ export const AuthProvider = ({children}) => {
     const registerUser = async (user) => {
         try {
             const res = await registerRequest(user)
-            if(!res.success){
+            if(res.status != 200){
                 console.log('Error al registrar usuario')
                 setErrors(res.error)
             }else{
-                setUser(res)
+                setUser(res.data)
                 setIsAuthenticated(true)
                 setErrors([])
             }
@@ -46,11 +46,11 @@ export const AuthProvider = ({children}) => {
       try {
         const res = await loginRequest(user)
         console.log(res)
-        if(!res.success){
+        if(res.status != 200){
           console.log('Error al logear usuario')
           setErrors(res.error)
         }else{
-          setUser(res)
+          setUser(res.data)
           setIsAuthenticated(true)
           setErrors([])
         }
@@ -98,8 +98,10 @@ export const AuthProvider = ({children}) => {
     const getAllCart = async() => {
       try {
         const res = await getAllCartRequest(user)
-        const shopItems = res.data[0].items
-        setShoppingCart(shopItems)
+        if(res.data.length > 0){
+          const shopItems = res.data[0].items
+          setShoppingCart(shopItems)
+        }
       } catch (error) {
         console.log(error)
       }

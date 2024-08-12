@@ -12,20 +12,20 @@ let collection;
     collection = await db.collection("users");
 })();
 
-export const register = async (req , res) => {
-    const {username , email , password} = req.body
+export const register = async (req, res) => {
+    const { username, email, password } = req.body;
     try {
-        let userFound = await collection.findOne({username})
-        if(userFound) return res.status(401).json(['Username already exists'])
+        let userFound = await collection.findOne({ username });
+        if (userFound) return res.status(401).json(['Username already exists']);
 
-        let emailFound = await collection.findOne({email})
-        if(emailFound) return res.status(401).json(['Email already exists'])
+        let emailFound = await collection.findOne({ email });
+        if (emailFound) return res.status(401).json(['Email already exists']);
 
-        const hashedPassword = await bcryptjs.hash(password , 8)
+        const hashedPassword = await bcryptjs.hash(password, 8);
 
         const newUser = new User({
-            username: username,
-            email: email,
+            username,
+            email,
             password: hashedPassword,
             personalInfo: {
                 firstName: '',
@@ -37,23 +37,22 @@ export const register = async (req , res) => {
             },
         });
 
-        const userSaved = await collection.insertOne(newUser)
-        const userId = userSaved.insertedId
+        const result = await collection.insertOne(newUser);
+        const userId = result.insertedId;
 
-        const token = await createAccessToken({id: userId})
-        res.cookie('token' , token)
-
+        const token = await createAccessToken({ id: userId });
+        res.cookie('token', token);
 
         res.json({
-            id: userSaved._id,
-            username: userSaved.username,
-            email: userSaved.email,
-            personalInfo: userSaved.personalInfo
-        })
+            id: userId, 
+            username: newUser.username, 
+            email: newUser.email,
+            personalInfo: newUser.personalInfo,
+        });
     } catch (error) {
-        res.status(500).json({message: error})
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
 export const login = async (req , res) => {
     const {email , password} = req.body
